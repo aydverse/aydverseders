@@ -70,6 +70,13 @@ nav{background:#fff;padding:14px 24px;display:flex;align-items:center;justify-co
 @keyframes blink{0%,80%,100%{opacity:.3}40%{opacity:1}}
 footer{background:#1a1a2e;color:#9ca3af;padding:32px 24px;text-align:center}
 footer a{color:#60a5fa;text-decoration:none;margin:0 10px}
+.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;align-items:center;justify-content:center;padding:16px}
+.modal-box{background:#fff;border-radius:16px;padding:28px;width:100%;max-width:440px;box-shadow:0 8px 32px rgba(0,0,0,.2)}
+.modal-box h3{font-size:18px;font-weight:700;margin-bottom:20px;color:#1a1a2e}
+.form-group{margin-bottom:14px}
+.form-group label{display:block;font-size:13px;font-weight:500;color:#374151;margin-bottom:6px}
+.form-group input,.form-group select,.form-group textarea{width:100%;padding:10px 12px;border:1px solid #d1d5db;border-radius:8px;font-size:14px;outline:none}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:#2563eb}
 </style>
 </head>
 <body>
@@ -185,15 +192,15 @@ footer a{color:#60a5fa;text-decoration:none;margin:0 10px}
     <h3>🎯 Hoca Bul — Ücretsiz Eşleştirme</h3>
     <div class="form-group">
       <label>Adınız Soyadınız</label>
-      <input type="text" placeholder="örn. Ahmet Yılmaz">
+      <input type="text" id="ad" placeholder="örn. Ahmet Yılmaz">
     </div>
     <div class="form-group">
       <label>Telefon</label>
-      <input type="tel" placeholder="05XX XXX XX XX">
+      <input type="tel" id="telefon" placeholder="05XX XXX XX XX">
     </div>
     <div class="form-group">
       <label>Branş</label>
-      <select>
+      <select id="brans">
         <option>Matematik</option>
         <option>Türkçe</option>
         <option>Fen Bilimleri</option>
@@ -204,7 +211,7 @@ footer a{color:#60a5fa;text-decoration:none;margin:0 10px}
     </div>
     <div class="form-group">
       <label>Şehir</label>
-      <select>
+      <select id="sehir">
         <option>Diyarbakır</option>
         <option>İstanbul</option>
         <option>Ankara</option>
@@ -214,7 +221,7 @@ footer a{color:#60a5fa;text-decoration:none;margin:0 10px}
     </div>
     <div class="form-group">
       <label>Not (isteğe bağlı)</label>
-      <textarea rows="2" placeholder="Hangi sınıf, hangi konu..."></textarea>
+      <textarea id="not" rows="2" placeholder="Hangi sınıf, hangi konu..."></textarea>
     </div>
     <div style="display:flex;gap:10px;margin-top:16px">
       <button class="btn btn-primary" style="flex:1;padding:10px" onclick="randevuGonder()">Eşleştir ✓</button>
@@ -317,6 +324,13 @@ async function sendChat(){
 function quickSend(t){document.getElementById('chatInput').value=t;sendChat();}
 
 function randevuGonder(){
+  const ad=document.getElementById('ad').value.trim();
+  const telefon=document.getElementById('telefon').value.trim();
+  if(!ad||!telefon){alert('Lütfen ad ve telefon alanlarını doldurun.');return;}
+  const brans=document.getElementById('brans').value;
+  const sehir=document.getElementById('sehir').value;
+  const not=document.getElementById('not').value;
+  console.log('Yeni randevu talebi:',{ad,telefon,brans,sehir,not});
   alert('Talebiniz alındı! En kısa sürede sizi arayacağız.');
   document.getElementById('randevuModal').style.display='none';
 }

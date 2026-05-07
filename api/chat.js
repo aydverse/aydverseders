@@ -16,13 +16,15 @@ export default async function handler(req, res) {
       body: JSON.stringify({
         model: 'claude-sonnet-4-20250514',
         max_tokens: 500,
-        system: system || 'Sen AydverseDers platformunun Turkce AI asistanisin. Ogrencilerin ihtiyaclarini anlayip uygun ogretmen onerirsin. Kisa ve samimi cevap ver.',
+        system: system || 'Sen AydverseDers platformunun Türkçe AI asistanısın. Öğrencilerin ihtiyaçlarını anlayıp uygun öğretmen önerirsin. Kısa ve samimi cevap ver (2-3 cümle). Öğretmen branşlarımız: Matematik, Türkçe, Fen, İngilizce, Tarih, KPSS.',
         messages: messages
       })
     });
     const data = await response.json();
+    console.log('Anthropic response:', JSON.stringify(data));
     res.status(200).json(data);
   } catch (error) {
-    res.status(500).json({ error: 'Internal server error' });
+    console.error('Error:', error);
+    res.status(500).json({ error: 'Internal server error', details: error.message });
   }
 }

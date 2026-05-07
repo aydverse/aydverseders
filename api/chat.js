@@ -14,7 +14,7 @@ export default async function handler(req, res) {
         'anthropic-version': '2023-06-01'
       },
       body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
+        model: 'claude-sonnet-4-5',
         max_tokens: 500,
         system: system || 'Sen AydverseDers platformunun Türkçe AI asistanısın. Öğrencilerin ihtiyaçlarını anlayıp uygun öğretmen önerirsin. Kısa ve samimi cevap ver (2-3 cümle). Öğretmen branşlarımız: Matematik, Türkçe, Fen, İngilizce, Tarih, KPSS.',
         messages: messages

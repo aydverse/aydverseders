@@ -323,7 +323,7 @@ async function sendChat(){
 
 function quickSend(t){document.getElementById('chatInput').value=t;sendChat();}
 
-async function randevuGonder(){
+ async function randevuGonder(){
   const ad=document.getElementById('ad').value.trim();
   const telefon=document.getElementById('telefon').value.trim();
   if(!ad||!telefon){alert('Lütfen ad ve telefon alanlarını doldurun.');return;}
@@ -331,22 +331,13 @@ async function randevuGonder(){
   const sehir=document.getElementById('sehir').value;
   const not=document.getElementById('not').value;
   try{
-    const r=await fetch('https://formspree.io/f/xlgzwaaq',{
+    const r=await fetch('/api/randevu',{
       method:'POST',
-      headers:{'Content-Type':'application/json','Accept':'application/json'},
+      headers:{'Content-Type':'application/json'},
       body:JSON.stringify({ad,telefon,brans,sehir,not})
     });
     const data=await r.json();
     if(r.ok){
-      await fetch('https://kxppmiwnrymyafvgkxlo.supabase.co/rest/v1/randevular',{
-        method:'POST',
-        headers:{
-          'Content-Type':'application/json',
-          'apikey':'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt4cHBtaXducnlteWFmdmdreGxvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgxNDcyNzEsImV4cCI6MjA5MzcyMzI3MX0.oDbvQNYMTn5gOAE8JnYNHxqEDUhPhEYvmoknB7F3eaM',
-          'Authorization':'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt4cHBtaXducnlteWFmdmdreGxvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgxNDcyNzEsImV4cCI6MjA5MzcyMzI3MX0.oDbvQNYMTn5gOAE8JnYNHxqEDUhPhEYvmoknB7F3eaM'
-        },
-        body:JSON.stringify({notlar:ad+' | '+telefon+' | '+brans+' | '+sehir+' | '+not,durum:'beklemede'})
-      });
       alert('✅ Talebiniz alındı! En kısa sürede sizi arayacağız.');
       document.getElementById('randevuModal').style.display='none';
       document.getElementById('ad').value='';
@@ -359,9 +350,5 @@ async function randevuGonder(){
     alert('Bağlantı hatası. İnternet bağlantınızı kontrol edin.');
   }
 }
-
-renderTeachers(ogretmenler);
-addMsg('Merhaba! 👋 Hangi branşta öğretmen arıyorsunuz? Size en uygun hocanı bulmama yardım edeyim.','bot');
-</script>
 </body>
 </html>

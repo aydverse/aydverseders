@@ -55,3 +55,10 @@
 ## Yeni Sohbette Kullanım
 GitHub repomdaki PROJE.md dosyasını oku,
 projeye kaldığımız yerden devam et.
+
+## Son Durum
+- Tarih: 08.05.2026
+- Son tamamlanan: Chat botu (Claude Haiku) çalışır hale getirildi
+- Bekleyen: Supabase teknik sorun nedeniyle RLS izni bekliyor
+- Sıradaki işlem: Supabase düzelince RLS insert politikası ekle, form test et
+- Uzun vadeli: Öğretmen verileri dinamik, WhatsApp bot, logo/favicon

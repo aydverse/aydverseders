@@ -1,4 +1,4 @@
-// api/chat.js - Öğrenci-Hoca eşleştirme botu
+// api/chat.js - Ogrenci-Hoca eslestirme botu
 import { createClient } from '@supabase/supabase-js'
 
 const supabase = createClient(
@@ -7,9 +7,9 @@ const supabase = createClient(
 )
 
 const sorular = [
-  { id: 'isim', soru: 'Merhaba! Adınız nedir?' },
-  { id: 'ders', soru: 'Hangi ders için özel ders arıyorsunuz? (Matematik, Türkçe, Fen, İngilizce, Tarih)' },
-  { id: 'sehir', soru: 'Hangi şehirde yaşıyorsunuz?' },
+  { id: 'isim', soru: 'Merhaba! Adiniz nedir?' },
+  { id: 'ders', soru: 'Hangi ders icin ozel ders ariyorsunuz? (Matematik, Turkce, Fen, Ingilizce, Tarih)' },
+  { id: 'sehir', soru: 'Hangi sehirde yasiyorsunuz?' },
   { id: 'seviye', soru: 'Hangi seviye? (LGS, YKS, KPSS, Okula Takviye)' }
 ]
 
@@ -17,7 +17,7 @@ let kullaniciVerileri = {}
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Sadece POST isteği kabul edilir' })
+    return res.status(405).json({ error: 'Sadece POST istegi kabul edilir' })
   }
 
   const { mesaj, oturumId } = req.body

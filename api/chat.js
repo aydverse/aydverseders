@@ -8,9 +8,9 @@ const supabase = createClient(
 
 const sorular = [
   { id: 'isim', soru: 'Merhaba! Adiniz nedir?' },
-  { id: 'ders', soru: 'Hangi ders icin ozel ders ariyorsunuz? (Matematik, Turkce, Fen, Ingilizce, Tarih)' },
+  { id: 'ders', soru: 'Hangi ders icin ozel ders ariyorsunuz?' },
   { id: 'sehir', soru: 'Hangi sehirde yasiyorsunuz?' },
-  { id: 'seviye', soru: 'Hangi seviye? (LGS, YKS, KPSS, Okula Takviye)' }
+  { id: 'seviye', soru: 'Hangi seviye? (LGS, YKS, KPSS)' }
 ]
 
 let kullaniciVerileri = {}
@@ -57,17 +57,16 @@ export default async function handler(req, res) {
 
   if (error || !hocalar || hocalar.length === 0) {
     return res.status(200).json({
-      cevap: `Uzgunum ${veri.ders} dersi icin uygun hocamiz yok.`,
+      cevap: 'Uygun hocamiz bulunamadi.',
       tamamlandi: true,
       hocalar: []
     })
   }
 
-  let hocaMesaji = `${veri.isim}, sana uygun hocalar:\n\n`
-  hocalar.forEach((hoca, i) => {
-    hocaMesaji += `${i+1}. ${hoca.ad_soyad} - ${hoca.branş} (${hoca.sehir})\n`
-    hocaMesaji += `   Puan: ${hoca.puan} | ${hoca.deneyim_yil} yil | ${hoca.ucret} TL\n\n`
-  })
+  let hocaMesaji = veri.isim + ', sana uygun hocalar:\n\n'
+  for (let i = 0; i < hocalar.length; i++) {
+    hocaMesaji += (i+1) + '. ' + hocalar[i].ad_soyad + ' - ' + hocalar[i].branş + '\n'
+  }
 
   await supabase
     .from('ogrenci_istekleri')
@@ -76,8 +75,7 @@ export default async function handler(req, res) {
       ders: veri.ders,
       sehir: veri.sehir,
       seviye: veri.seviye,
-      durum: 'bot_eslestirdi',
-      eslesen_hoca_id: hocalar[0]?.id
+      durum: 'bot_eslestirdi'
     }])
 
   return res.status(200).json({

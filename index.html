@@ -323,16 +323,32 @@ async function sendChat(){
 
 function quickSend(t){document.getElementById('chatInput').value=t;sendChat();}
 
-function randevuGonder(){
+async function randevuGonder(){
   const ad=document.getElementById('ad').value.trim();
   const telefon=document.getElementById('telefon').value.trim();
   if(!ad||!telefon){alert('Lütfen ad ve telefon alanlarını doldurun.');return;}
   const brans=document.getElementById('brans').value;
   const sehir=document.getElementById('sehir').value;
   const not=document.getElementById('not').value;
-  console.log('Yeni randevu talebi:',{ad,telefon,brans,sehir,not});
-  alert('Talebiniz alındı! En kısa sürede sizi arayacağız.');
-  document.getElementById('randevuModal').style.display='none';
+  try{
+    const r=await fetch('https://formspree.io/f/xlgzwaaq',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','Accept':'application/json'},
+      body:JSON.stringify({ad,telefon,brans,sehir,not})
+    });
+    const data=await r.json();
+    if(r.ok){
+      alert('✅ Talebiniz alındı! En kısa sürede sizi arayacağız.');
+      document.getElementById('randevuModal').style.display='none';
+      document.getElementById('ad').value='';
+      document.getElementById('telefon').value='';
+      document.getElementById('not').value='';
+    }else{
+      alert('Hata: '+(data.error||'Gönderilemedi, tekrar deneyin.'));
+    }
+  }catch(e){
+    alert('Bağlantı hatası. İnternet bağlantınızı kontrol edin.');
+  }
 }
 
 renderTeachers(ogretmenler);

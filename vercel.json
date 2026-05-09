@@ -1,15 +1,3 @@
 {
-  "functions": {
-    "randevu.js": {
-      "runtime": "nodejs20.x"
-    },
-    "chat.js": {
-      "runtime": "nodejs20.x"
-    }
-  },
-  "routes": [
-    { "src": "/api/randevu", "dest": "/randevu.js" },
-    { "src": "/api/chat", "dest": "/chat.js" }
-  ],
   "regions": ["iad1"]
 }

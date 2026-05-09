@@ -387,28 +387,33 @@ async function randevuGonder() {
   btn.textContent = 'Gönderiliyor...';
 
   try {
-    const res = await sbFetch('randevular', {
+try {
+    const res = await fetch('/api/randevu', {
       method: 'POST',
-      prefer: 'return=minimal',
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        ad:       adVal,
-        telefon:  telVal,
-        brans:    bransVal,
-        sehir:    sehirVal,
-        not_alan: notVal,
-        durum:    'beklemede'
+        ad:      adVal,
+        telefon: telVal,
+        brans:   bransVal,
+        sehir:   sehirVal,
+        not:     notVal
       })
     });
 
-    if (res.ok || res.status === 201) {
+    const data = await res.json();
+
+    if (res.ok && data.ok) {
       submitTimes.push(Date.now());
       alert('✅ Talebiniz alındı! En kısa sürede sizi arayacağız.');
       document.getElementById('randevuModal').style.display = 'none';
       ['ad','telefon','not'].forEach(id => document.getElementById(id).value = '');
       document.getElementById('charCount').textContent = '0';
     } else {
-      const err = await res.json().catch(()=>({}));
-      alert('Hata: ' + (err.message || err.error || 'Gönderilemedi.'));
+      alert('Hata: ' + (data.error || 'Gönderilemedi.'));
+    }
+  } catch(e) {
+    alert('Bağlantı hatası. Tekrar deneyin.');
+  }
     }
   } catch(e) {
     alert('Bağlantı hatası. İnternet bağlantınızı kontrol edin.');

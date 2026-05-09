@@ -12,39 +12,15 @@ export default async function handler(req, res) {
       return;
     }
 
-    // 1) Formspree — hata olsa bile devam et
-    try {
-      await fetch('https://formspree.io/f/xlgzwaaq', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-        body: JSON.stringify({ ad, telefon, brans, sehir, not })
-      });
-    } catch(formErr) {
-      console.error('Formspree hatası (devam ediliyor):', formErr.message);
-    }
-
-    // 2) Supabase
-    const sbRes = await fetch(`${process.env.SUPABASE_URL}/rest/v1/randevular`, {
+    const formRes = await fetch('https://formspree.io/f/xlgzwaaq', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'apikey': process.env.SUPABASE_ANON_KEY,
-        'Authorization': `Bearer ${process.env.SUPABASE_ANON_KEY}`,
-        'Prefer': 'return=minimal'
-      },
-      body: JSON.stringify({
-        ad, telefon,
-        brans:    brans || null,
-        sehir:    sehir || null,
-        not_alan: not   || null,
-        durum:    'beklemede'
-      })
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify({ ad, telefon, brans, sehir, not })
     });
 
-    if (!sbRes.ok) {
-      const sbErr = await sbRes.json().catch(() => ({}));
-      console.error('Supabase hatası:', sbErr);
-      res.status(500).json({ error: 'Veritabanına kaydedilemedi.' });
+    if (!formRes.ok) {
+      const err = await formRes.json().catch(() => ({}));
+      res.status(500).json({ error: err.error || 'Form gönderilemedi.' });
       return;
     }
 

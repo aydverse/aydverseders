@@ -2,54 +2,47 @@
 
 ## Teknik Altyapı
 - Domain: aydverseders.xyz
-- Hosting: Vercel (GitHub otomatik deploy)
-- Veritabanı: Supabase (Türkiye'den erişim engeli var, geçici bypass ile çalışıyor)
-- Supabase URL: https://xkppmiwnrymyafvgkxlo.supabase.co
+- Hosting: Vercel (GitHub otomatik deploy, region: iad1)
+- Veritabanı: Neon DB (PostgreSQL, AWS US East 1 N. Virginia) ✅
+- Supabase: Türkiye'den erişim engeli nedeniyle terk edildi
 - Cloudflare: DNS + WAF koruması
-- Formspree: aktif ve çalışıyor (xlgzwaaq)
+- Formspree: aktif (xlgzwaaq) — email bildirimi için
 
 ## Dosyalar
 - index.html — Ana sayfa
 - admin.html — Admin paneli (şifre korumalı)
-- chat.js — AI chat botu (Claude Haiku) — kök dizinde
-- randevu.js — Randevu API — kök dizinde
+- chat.js — AI chat botu (Claude Haiku)
+- randevu.js — Randevu API (Formspree + Neon DB)
 - vercel.json — Region ayarı (iad1)
+- package.json — ESM + Neon DB paketi
 
 ## Tamamlanan İşlemler
 - Admin şifre koruması (brute-force kilidi dahil)
 - Form validasyonu (ad, telefon format kontrolü)
 - Rate limiting (10 dakikada max 3 gönderim)
-- Supabase randevular tablosuna sütunlar eklendi
 - Chat botu Claude Haiku API ile çalışıyor
 - Cloudflare WAF admin koruması
-- Öğretmen listesi ilk yüklemede boş kalma hatası giderildi
-- Supabase RLS insert politikası eklendi
-- Form → Vercel → Formspree akışı çalışıyor (200 OK)
-- Vercel region iad1 (Washington DC) olarak ayarlandı
-- index.html temizden yeniden oluşturuldu (sbFetch kaldırıldı)
+- Form → Vercel → Formspree + Neon DB akışı çalışıyor ✅
+- Neon DB randevular tablosu oluşturuldu ✅
+- Vercel region iad1 olarak ayarlandı ✅
+- index.html temizden yeniden oluşturuldu ✅
 
 ## Bekleyen İşlemler
-- Supabase erişim sorunu kalıcı çözümü (Türkiye engeli)
-  - Seçenek 1: Alternatif DB (Neon, PlanetScale)
-  - Seçenek 2: Formspree üzerinden veri yönetimi
-- Öğretmen verilerini dinamik çekme
+- Öğretmen verilerini Neon DB'den dinamik çekme
 - Öğretmen kayıt ve onay sistemi
+- Admin panelinde Neon DB randevularını görüntüleme
 - WhatsApp bot entegrasyonu
 - Logo ve favicon ekleme
-- Eski NULL randevu kayıtlarını temizleme
+- Eski Supabase NULL kayıtlarını temizleme (isteğe bağlı)
 
-## Supabase Tabloları
-- randevular (id, ogretmen_id, ogrenci_id, tarih, saat, durum, ad, telefon, brans, sehir, not_alan, olusturma_tarihi)
-- ogretmenler
-- ogrenciler
-- yorumlar
-- hocalar
-- ogrenci_istekleri
+## Neon DB Tabloları
+- randevular (id, ad, telefon, brans, sehir, not_alan, durum, olusturma_tarihi)
 
 ## Vercel Environment Variables
-- SUPABASE_URL = https://xkppmiwnrymyafvgkxlo.supabase.co
-- SUPABASE_ANON_KEY (anon public key)
+- DATABASE_URL (Neon DB connection string)
 - ANTHROPIC_API_KEY
+- SUPABASE_URL (artık kullanılmıyor)
+- SUPABASE_ANON_KEY (artık kullanılmıyor)
 
 ## Öne Çıkan Özellik Fikirleri
 - AI zayıf konu tespit botu
@@ -64,8 +57,6 @@ projeye kaldığımız yerden devam et.
 
 ## Son Durum
 - Tarih: 09.05.2026
-- Son tamamlanan: Form → Vercel → Formspree akışı çalışır hale getirildi (200 OK)
-- Sorun: Supabase Türkiye'den erişilemiyor, Vercel sunucusu da etkileniyor
-- Geçici çözüm: Formspree ile form verileri alınıyor
-- Sıradaki işlem: Supabase yerine alternatif DB veya kalıcı çözüm
-- Uzun vadeli: Öğretmen verileri dinamik, WhatsApp bot, logo/favicon
+- Son tamamlanan: Neon DB entegrasyonu — form verileri başarıyla yazılıyor
+- Sıradaki işlem: Öğretmen verilerini Neon DB'den dinamik çekme
+- Uzun vadeli: Öğretmen kayıt sistemi, WhatsApp bot, logo/favicon

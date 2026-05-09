@@ -230,18 +230,57 @@ footer a{color:#60a5fa;text-decoration:none;margin:0 10px}
 const SUPABASE_URL = 'https://xkppmiwnrymyafvgkxlo.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_PdWsTm33U9KeCgsz-e7uFw_3NwcqIOt'; 
 
-async function sbFetch(path, opts = {}) {
-  const res = await fetch(`${SUPABASE_URL}/rest/v1/${path}`, {
-    ...opts,
-    headers: {
-      'apikey': SUPABASE_KEY,
-      'Authorization': `Bearer ${SUPABASE_KEY}`,
-      'Content-Type': 'application/json',
-      'Prefer': opts.prefer || '',
-      ...(opts.headers || {})
+async function randevuGonder() {
+  const adVal    = document.getElementById('ad').value.trim();
+  const telVal   = document.getElementById('telefon').value.trim();
+  const bransVal = document.getElementById('brans').value;
+  const sehirVal = document.getElementById('sehir').value;
+  const notVal   = document.getElementById('not').value.trim();
+
+  let ok = true;
+  if (!validateAd(adVal))  { showErr('ad');      ok = false; }
+  if (!validateTel(telVal)){ showErr('telefon'); ok = false; }
+  if (!ok) return;
+
+  if (!canSubmit()) {
+    alert('⚠️ Çok fazla istek. Lütfen 10 dakika bekleyin.');
+    return;
+  }
+
+  const btn = document.getElementById('submitBtn');
+  btn.disabled = true;
+  btn.textContent = 'Gönderiliyor...';
+
+  try {
+    const res = await fetch('/api/randevu', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        ad:     adVal,
+        telefon: telVal,
+        brans:  bransVal,
+        sehir:  sehirVal,
+        not:    notVal
+      })
+    });
+
+    const data = await res.json();
+
+    if (res.ok && data.ok) {
+      submitTimes.push(Date.now());
+      alert('✅ Talebiniz alındı! En kısa sürede sizi arayacağız.');
+      document.getElementById('randevuModal').style.display = 'none';
+      ['ad','telefon','not'].forEach(id => document.getElementById(id).value = '');
+      document.getElementById('charCount').textContent = '0';
+    } else {
+      alert('Hata: ' + (data.error || 'Gönderilemedi.'));
     }
-  });
-  return res;
+  } catch(e) {
+    alert('Bağlantı hatası. Tekrar deneyin.');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Eşleştir ✓';
+  }
 }
 
 // ── ÖĞRETMENLER ──

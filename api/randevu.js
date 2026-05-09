@@ -1,3 +1,5 @@
+import { neon } from '@neondatabase/serverless';
+
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
@@ -12,17 +14,23 @@ export default async function handler(req, res) {
       return;
     }
 
-    const formRes = await fetch('https://formspree.io/f/xlgzwaaq', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-      body: JSON.stringify({ ad, telefon, brans, sehir, not })
-    });
-
-    if (!formRes.ok) {
-      const err = await formRes.json().catch(() => ({}));
-      res.status(500).json({ error: err.error || 'Form gönderilemedi.' });
-      return;
+    // 1) Formspree
+    try {
+      await fetch('https://formspree.io/f/xlgzwaaq', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify({ ad, telefon, brans, sehir, not })
+      });
+    } catch(formErr) {
+      console.error('Formspree hatası:', formErr.message);
     }
+
+    // 2) Neon DB
+    const sql = neon(process.env.DATABASE_URL);
+    await sql`
+      INSERT INTO randevular (ad, telefon, brans, sehir, not_alan, durum)
+      VALUES (${ad}, ${telefon}, ${brans || null}, ${sehir || null}, ${not || null}, 'beklemede')
+    `;
 
     res.status(200).json({ ok: true });
   } catch (error) {
